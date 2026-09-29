@@ -1,0 +1,6 @@
+{
+  "name": "Apni Jodi — Modern Heritage Matchmaking",
+  "description": "Dignified matrimonial & intentional dating platform for high-intent individuals and distinguished families. Jodi Jo Dil Ko Pasand Aaye.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

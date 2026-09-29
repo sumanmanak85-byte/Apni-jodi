@@ -1,0 +1,142 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Authenticated user profile and credentials",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "fullName": { "type": "string" },
+        "phone": { "type": "string" },
+        "age": { "type": "number" },
+        "gender": { "type": "string", "enum": ["male", "female", "other"] },
+        "city": { "type": "string" },
+        "isVerified": { "type": "boolean" },
+        "isPhoneVerified": { "type": "boolean" },
+        "isEmailVerified": { "type": "boolean" },
+        "isAgeVerified": { "type": "boolean" },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "membershipTier": { "type": "string", "enum": ["Basic", "Premium", "VIP"] },
+        "membershipExpiry": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "bio": { "type": "string" },
+        "interests": { "type": "array" },
+        "diet": { "type": "string" },
+        "profession": { "type": "string" },
+        "education": { "type": "string" },
+        "community": { "type": "string" },
+        "photoPrivacyShield": { "type": "boolean" },
+        "datingPreferences": { "type": "object" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "fullName", "age", "membershipTier"]
+    },
+    "Interest": {
+      "title": "Interest",
+      "description": "Bilateral interest between two users",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "senderId": { "type": "string" },
+        "receiverId": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "accepted", "rejected"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "senderId", "receiverId", "status"]
+    },
+    "Match": {
+      "title": "Match",
+      "description": "Mutual match between two users who accepted interests",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "users": { "type": "array" },
+        "status": { "type": "string", "enum": ["active", "unmatched", "blocked"] },
+        "consentUserA": { "type": "boolean" },
+        "consentUserB": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "users", "status"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Private message inside a match channel",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "matchId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "receiverId": { "type": "string" },
+        "text": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "isRead": { "type": "boolean" }
+      },
+      "required": ["id", "matchId", "senderId", "text", "createdAt"]
+    },
+    "PaymentOrder": {
+      "title": "PaymentOrder",
+      "description": "Razorpay order and subscription transaction",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "tier": { "type": "string", "enum": ["Basic", "Premium", "VIP"] },
+        "baseAmount": { "type": "number" },
+        "discountAmount": { "type": "number" },
+        "couponCode": { "type": "string" },
+        "taxAmount": { "type": "number" },
+        "finalAmount": { "type": "number" },
+        "currency": { "type": "string" },
+        "razorpayOrderId": { "type": "string" },
+        "razorpayPaymentId": { "type": "string" },
+        "status": { "type": "string", "enum": ["created", "paid", "failed", "refunded"] },
+        "invoiceNumber": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "tier", "finalAmount", "status"]
+    },
+    "Report": {
+      "title": "Report",
+      "description": "Trust & Safety report submitted by a user",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "reportedBy": { "type": "string" },
+        "targetUserId": { "type": "string" },
+        "reason": { "type": "string" },
+        "details": { "type": "string" },
+        "status": { "type": "string", "enum": ["open", "investigating", "resolved", "dismissed"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "reportedBy", "targetUserId", "reason", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles and account settings"
+    },
+    "/interests/{interestId}": {
+      "schema": { "$ref": "#/entities/Interest" },
+      "description": "Sent and received courtship interests"
+    },
+    "/matches/{matchId}": {
+      "schema": { "$ref": "#/entities/Match" },
+      "description": "Mutual matches between vetted members"
+    },
+    "/matches/{matchId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/Message" },
+      "description": "Direct encrypted messages between matched candidates"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/PaymentOrder" },
+      "description": "Subscription payments, invoices, and transactions"
+    },
+    "/reports/{reportId}": {
+      "schema": { "$ref": "#/entities/Report" },
+      "description": "Confidential member reports and violations"
+    }
+  }
+}
